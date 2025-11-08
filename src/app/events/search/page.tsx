@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { 
   EventCard,
@@ -14,7 +14,7 @@ import SortOptions, { SortOption } from '@/components/search/SortOptions';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-export default function SearchResultsPage() {
+function SearchResultsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -319,6 +319,39 @@ export default function SearchResultsPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function SearchResultsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50">
+        <Header activePage="events" />
+        <main>
+          <section className="bg-white border-b py-8">
+            <div className="container mx-auto px-4 max-w-7xl">
+              <h1 className="text-3xl font-bold mb-6">Search Events</h1>
+              <div className="animate-pulse">
+                <div className="h-12 bg-gray-200 rounded mb-4"></div>
+                <div className="h-12 bg-gray-200 rounded"></div>
+              </div>
+            </div>
+          </section>
+          <section className="bg-white py-8">
+            <div className="container mx-auto px-4 max-w-7xl">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Array(9).fill(null).map((_, index) => (
+                  <EventCardSkeleton key={index} />
+                ))}
+              </div>
+            </div>
+          </section>
+        </main>
+        <Footer />
+      </div>
+    }>
+      <SearchResultsContent />
+    </Suspense>
   );
 }
 
