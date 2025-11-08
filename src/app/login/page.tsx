@@ -252,11 +252,6 @@ export default function LoginPage() {
           if (location?.trim()) params.set('location', location.trim());
           router.push(`/events${params.toString() ? `?${params.toString()}` : ''}`);
         }}
-        onCategorySelect={(categoryId) => {
-          if (!categoryId) return;
-          const params = new URLSearchParams({ category: categoryId });
-          router.push(`/events?${params.toString()}`);
-        }}
       />
       <Suspense
         fallback={
