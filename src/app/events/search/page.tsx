@@ -80,7 +80,7 @@ export default function SearchResultsPage() {
         filtered = filtered.filter(event => {
           const eventStartDate = typeof event.startDate === 'string' 
             ? new Date(event.startDate) 
-            : (event.startDate as any)?.toDate?.() || new Date(event.startDate);
+            : (event.startDate as any)?.toDate?.() || new Date();
           
           if (filters.startDate) {
             const startDate = new Date(filters.startDate);
