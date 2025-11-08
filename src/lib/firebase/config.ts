@@ -34,43 +34,35 @@ if (typeof window !== 'undefined') {
   });
 }
 
-// Initialize App Check for client-side environments
+// Initialize App Check for client-side environments (optional - app works without it)
 if (typeof window !== 'undefined') {
-  try {
-    if (process.env.NODE_ENV === 'development') {
-      // Set debug token BEFORE initializing App Check
-      // @ts-ignore
-      window.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
-      // @ts-ignore  
-      self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
-      
-      console.log('App Check: Debug token set for development');
-    }
-    
-    // Initialize App Check with better error handling
-    if (process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && process.env.NODE_ENV === 'production') {
-      // Production with reCAPTCHA - only if we have a valid key
-      try {
-        const appCheck = initializeAppCheck(app, {
-          provider: new ReCaptchaV3Provider('6Ldzs2ErAAAAAOXtchWnyceYZaTANN-BgfOFxTZl'),
-          isTokenAutoRefreshEnabled: true
-        });
-        console.log('App Check: Initialized with reCAPTCHA for production');
-      } catch (recaptchaError) {
-        console.error('App Check reCAPTCHA initialization failed:', recaptchaError);
-        // Don't throw - allow app to continue without App Check
+  // Only initialize App Check if explicitly enabled and configured
+  const enableAppCheck = process.env.NEXT_PUBLIC_ENABLE_APP_CHECK === 'true';
+  const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+  
+  if (enableAppCheck && recaptchaSiteKey) {
+    try {
+      if (process.env.NODE_ENV === 'development') {
+        // Set debug token BEFORE initializing App Check
+        // @ts-ignore
+        window.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+        // @ts-ignore  
+        self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+        console.log('App Check: Debug token set for development');
       }
-    } else {
-      // Development or fallback
+      
       const appCheck = initializeAppCheck(app, {
-        provider: new ReCaptchaV3Provider('6Ldzs2ErAAAAAOXtchWnyceYZaTANN-BgfOFxTZl'), // Test site key
+        provider: new ReCaptchaV3Provider(recaptchaSiteKey),
         isTokenAutoRefreshEnabled: true
       });
-      console.log('App Check: Initialized for development with debug mode');
+      console.log('App Check: Initialized successfully');
+    } catch (error) {
+      // Silently fail - App Check is optional
+      console.warn('App Check initialization failed - app will continue without it:', error);
     }
-  } catch (error) {
-    console.warn('App Check initialization failed - continuing without App Check:', error);
-    // Don't throw - allow app to work without App Check
+  } else {
+    // App Check disabled or not configured - this is fine
+    console.log('App Check: Not enabled or not configured - app will work without it');
   }
 }
 
