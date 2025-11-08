@@ -5,17 +5,41 @@ import { getFirestore } from 'firebase/firestore';
 import { getAnalytics, isSupported } from 'firebase/analytics';
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 
+// Helper to safely get environment variable (prevents undefined from being passed to Firebase)
+function getEnvVar(key: string): string {
+  const value = process.env[key];
+  // Return empty string if undefined/null, but this will cause Firebase to fail with a clear error
+  // Better than passing undefined which causes "Failed to construct Headers" error
+  return value || '';
+}
+
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+  apiKey: getEnvVar('NEXT_PUBLIC_FIREBASE_API_KEY'),
+  authDomain: getEnvVar('NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN'),
+  projectId: getEnvVar('NEXT_PUBLIC_FIREBASE_PROJECT_ID'),
+  storageBucket: getEnvVar('NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET'),
+  messagingSenderId: getEnvVar('NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID'),
+  appId: getEnvVar('NEXT_PUBLIC_FIREBASE_APP_ID'),
+  // measurementId is optional - only include if it exists and is not empty
+  ...(process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID?.trim() && {
+    measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+  }),
 };
+
+// Validate that required config values are present (for better error messages)
+if (typeof window !== 'undefined') {
+  const requiredFields = ['apiKey', 'authDomain', 'projectId', 'appId'] as const;
+  const missingFields = requiredFields.filter(field => !firebaseConfig[field] || firebaseConfig[field].trim() === '');
+  
+  if (missingFields.length > 0) {
+    console.error(
+      `Firebase configuration error: Missing or empty required fields: ${missingFields.join(', ')}. ` +
+      `Please check that all Firebase environment variables are set in Firebase App Hosting secrets.`
+    );
+  }
+}
 
 // Initialize Firebase - works in both browser and server environments
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
