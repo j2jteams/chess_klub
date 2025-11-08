@@ -108,16 +108,15 @@ export default function CustomChessBoard({
     const preventDrag = (e: Event) => {
       e.preventDefault();
       e.stopPropagation();
-      return false;
     };
 
-    const preventDragStart = (e: DragEvent) => {
+    const preventDragStart = (e: Event) => {
       e.preventDefault();
       e.stopPropagation();
-      if (e.dataTransfer) {
-        e.dataTransfer.effectAllowed = 'none';
+      const dragEvent = e as DragEvent;
+      if (dragEvent.dataTransfer) {
+        dragEvent.dataTransfer.effectAllowed = 'none';
       }
-      return false;
     };
 
     // Get all chess board elements
