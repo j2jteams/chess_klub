@@ -53,7 +53,7 @@ export default function DashboardStats({ userId, isOwner = false }: DashboardSta
       const upcomingEvents = publishedEvents.filter(e => {
         const startDate = typeof e.startDate === 'string' 
           ? new Date(e.startDate) 
-          : (e.startDate as any)?.toDate?.() || new Date(e.startDate);
+          : (e.startDate as any)?.toDate?.() || new Date();
         return startDate > now;
       });
 

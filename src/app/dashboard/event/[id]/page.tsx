@@ -70,12 +70,12 @@ export default function EditEventPage() {
     const startDate = event.startDate ? 
       (typeof event.startDate === 'string' 
         ? event.startDate 
-        : formatDateForLocalInput(new Date(event.startDate.seconds * 1000))
+        : formatDateForLocalInput((event.startDate as any)?.toDate?.() || new Date((event.startDate as any)?.seconds * 1000 || Date.now()))
       ) : '';
     const endDate = event.endDate ? 
       (typeof event.endDate === 'string' 
         ? event.endDate 
-        : formatDateForLocalInput(new Date(event.endDate.seconds * 1000))
+        : formatDateForLocalInput((event.endDate as any)?.toDate?.() || new Date((event.endDate as any)?.seconds * 1000 || Date.now()))
       ) : '';
 
     return {
@@ -98,7 +98,7 @@ export default function EditEventPage() {
         deadline: event.registrationConfig.deadline 
           ? (typeof event.registrationConfig.deadline === 'string' 
               ? new Date(event.registrationConfig.deadline)
-              : new Date(event.registrationConfig.deadline.seconds * 1000))
+              : (event.registrationConfig.deadline as any)?.toDate?.() || new Date((event.registrationConfig.deadline as any)?.seconds * 1000 || Date.now()))
           : undefined
       } : undefined,
     };

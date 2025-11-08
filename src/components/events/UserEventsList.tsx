@@ -31,8 +31,8 @@ export default function UserEventsList({ userId, showSuccess, showError, searchT
   const formatDate = (date: Timestamp | string | undefined) => {
     if (!date) return 'N/A';
     const timestamp = typeof date === 'string'
-  ? new Date(date)
-  : new Date(date.seconds * 1000);
+      ? new Date(date)
+      : (date as any)?.toDate?.() || new Date((date as any)?.seconds * 1000 || Date.now());
 
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',

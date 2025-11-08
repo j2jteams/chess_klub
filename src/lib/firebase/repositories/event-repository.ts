@@ -137,13 +137,13 @@ export const EventRepository = {
     const upcomingEvents = result.documents.filter(event => {
       const startDate = typeof event.startDate === 'string' 
         ? new Date(event.startDate)
-        : new Date(event.startDate.seconds * 1000);
+        : (event.startDate as any)?.toDate?.() || new Date((event.startDate as any)?.seconds * 1000 || Date.now());
       
       // If event has an end date, check if it hasn't ended yet
       if (event.endDate) {
         const endDate = typeof event.endDate === 'string'
           ? new Date(event.endDate)
-          : new Date(event.endDate.seconds * 1000);
+          : (event.endDate as any)?.toDate?.() || new Date((event.endDate as any)?.seconds * 1000 || Date.now());
         return endDate >= todayStart; // Show if event ends today or later
       }
       
@@ -398,7 +398,7 @@ export const EventRepository = {
       if (event.registrationConfig.deadline) {
         const deadline = typeof event.registrationConfig.deadline === 'string' 
           ? new Date(event.registrationConfig.deadline)
-          : new Date(event.registrationConfig.deadline.seconds * 1000);
+          : (event.registrationConfig.deadline as any)?.toDate?.() || new Date((event.registrationConfig.deadline as any)?.seconds * 1000 || Date.now());
         
         if (new Date() > deadline) {
           return { open: false, reason: 'Registration deadline has passed' };

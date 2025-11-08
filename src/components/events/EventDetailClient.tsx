@@ -78,12 +78,12 @@ export default function EventDetailClient({
     const startDate =
       typeof event.startDate === 'string'
         ? new Date(event.startDate)
-        : new Date(event.startDate.seconds * 1000);
+        : (event.startDate as any)?.toDate?.() || new Date((event.startDate as any)?.seconds * 1000 || Date.now());
 
     const endDate = event.endDate
       ? typeof event.endDate === 'string'
         ? new Date(event.endDate)
-        : new Date(event.endDate.seconds * 1000)
+        : (event.endDate as any)?.toDate?.() || new Date((event.endDate as any)?.seconds * 1000 || Date.now())
       : new Date(startDate.getTime() + 60 * 60 * 1000);
 
     const formatDateForCalendar = (date: Date) =>
@@ -168,7 +168,7 @@ END:VCALENDAR`;
       const eventStart =
         typeof event.startDate === 'string'
           ? new Date(event.startDate)
-          : new Date(event.startDate.seconds * 1000);
+          : (event.startDate as any)?.toDate?.() || new Date((event.startDate as any)?.seconds * 1000 || Date.now());
 
       const reminderTime = new Date(
         eventStart.getTime() - hours * 60 * 60 * 1000

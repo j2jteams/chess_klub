@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     // Format date
     const startDate = typeof event.startDate === 'string' 
       ? new Date(event.startDate)
-      : new Date(event.startDate.seconds * 1000);
+      : (event.startDate as any)?.toDate?.() || new Date((event.startDate as any)?.seconds * 1000 || Date.now());
     const dateStr = startDate.toLocaleDateString('en-US', { 
       weekday: 'long', 
       year: 'numeric', 

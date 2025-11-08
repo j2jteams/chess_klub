@@ -199,7 +199,9 @@ export default function RegistrationsTable({
   // Format date for display
   const formatDate = (date: any) => {
     if (!date) return 'N/A';
-    const d = typeof date === 'string' ? new Date(date) : new Date(date.seconds * 1000);
+    const d = typeof date === 'string' 
+      ? new Date(date) 
+      : (date as any)?.toDate?.() || new Date((date as any)?.seconds * 1000 || Date.now());
     return d.toLocaleDateString() + ' ' + d.toLocaleTimeString();
   };
 

@@ -339,7 +339,7 @@ export const RegistrationRepository = {
     if (registrationConfig.deadline) {
       const deadline = typeof registrationConfig.deadline === 'string' 
         ? new Date(registrationConfig.deadline)
-        : new Date(registrationConfig.deadline.seconds * 1000);
+        : (registrationConfig.deadline as any)?.toDate?.() || new Date((registrationConfig.deadline as any)?.seconds * 1000 || Date.now());
       
       if (new Date() > deadline) {
         return { open: false, reason: 'Registration deadline has passed' };

@@ -114,7 +114,7 @@ export default function EventRegistrationsPage() {
   const hasDeadlinePassed = registrationDeadline 
     ? new Date() > (typeof registrationDeadline === 'string' 
         ? new Date(registrationDeadline)
-        : new Date(registrationDeadline.seconds * 1000))
+        : (registrationDeadline as any)?.toDate?.() || new Date((registrationDeadline as any)?.seconds * 1000 || Date.now()))
     : false;
 
   return (

@@ -97,7 +97,7 @@ export default function PendingAdmins({ onAdminPromoted }: PendingAdminsProps) {
     if (typeof date === 'string') {
       return new Date(date).toLocaleDateString();
     }
-    if (date && typeof date === 'object' && 'toDate' in date) {
+    if (date && typeof date === 'object' && 'toDate' in date && typeof date.toDate === 'function') {
       return date.toDate().toLocaleDateString();
     }
     return 'N/A';
