@@ -59,8 +59,6 @@ export default function DashboardPage() {
           onSearch={handleSearch}
           initialLocation={location}
           initialSearchTerm={searchTerm}
-          onCategorySelect={handleCategorySelect}
-          selectedCategory={selectedCategory}
         />
         <div className="container mx-auto px-4 py-12 max-w-7xl">
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-8 text-center">
@@ -85,8 +83,6 @@ export default function DashboardPage() {
         onSearch={handleSearch}
         initialLocation={location}
         initialSearchTerm={searchTerm}
-        onCategorySelect={handleCategorySelect}
-        selectedCategory={selectedCategory}
       />
       
       {/* Active Filters */}
