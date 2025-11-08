@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/context/AuthContext';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import { ActiveFilters } from '@/components/events';
@@ -10,6 +11,7 @@ import { UserRole } from '@/lib/models';
 import { OwnerDashboard, AdminDashboard } from '@/components/dashboard';
 
 export default function DashboardPage() {
+  const router = useRouter();
   const { user, loading } = useAuth();
   const { notifications, removeNotification, showSuccess, showError } = useNotifications();
   const [searchTerm, setSearchTerm] = useState('');
@@ -27,6 +29,13 @@ export default function DashboardPage() {
     setSelectedCategory(categoryId);
   };
 
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login?redirect=/dashboard');
+    }
+  }, [loading, user, router]);
+
   // Show loading state
   if (loading) {
     return (
@@ -38,7 +47,7 @@ export default function DashboardPage() {
 
   // Must be authenticated
   if (!user) {
-    return <ProtectedRoute />;
+    return null; // Will redirect via useEffect
   }
 
   // Check if user has admin or owner role
