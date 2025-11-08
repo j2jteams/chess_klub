@@ -137,14 +137,18 @@ export default function EventPreview({ formData, onClose, onSubmit }: EventPrevi
               <div>
                 <p className="font-medium">Categories</p>
                 <div className="flex flex-wrap gap-1 mt-1">
-                  {formData.categories.map((category) => (
-                    <span 
-                      key={category} 
-                      className="px-2 py-1 text-xs bg-muted rounded-full"
-                    >
-                      {category}
-                    </span>
-                  ))}
+                  {formData.categories && formData.categories.length > 0 ? (
+                    formData.categories.map((category) => (
+                      <span 
+                        key={category} 
+                        className="px-2 py-1 text-xs bg-muted rounded-full"
+                      >
+                        {category}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-sm text-muted-foreground">No categories</span>
+                  )}
                 </div>
               </div>
             </div>
