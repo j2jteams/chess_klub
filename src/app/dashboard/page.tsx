@@ -91,9 +91,7 @@ export default function DashboardPage() {
           <div className="container mx-auto px-4 max-w-7xl py-4">
             <ActiveFilters
               searchTerm={searchTerm}
-              selectedCategory={selectedCategory}
               onClearSearch={() => setSearchTerm('')}
-              onClearCategory={() => setSelectedCategory(null)}
               onClearAll={() => {
                 setSearchTerm('');
                 setSelectedCategory(null);
