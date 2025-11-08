@@ -1,0 +1,100 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to get user role (returns null if user doesn't exist or has no role)
+    function getUserRole() {
+      let userDoc = get(/databases/$(database)/documents/users/$(request.auth.uid));
+      return userDoc != null && 'role' in userDoc.data ? userDoc.data.role : null;
+    }
+    
+    // Helper function to check if user is owner
+    function isOwner() {
+      return request.auth != null && getUserRole() == 'owner';
+    }
+    
+    // Helper function to check if user is admin or owner
+    function isAdminOrOwner() {
+      return request.auth != null && getUserRole() in ['admin', 'owner'];
+    }
+    
+    // Events collection
+    match /events/{eventId} {
+      
+      // 👉 Anyone can read events (published or not)
+      allow read: if true;
+      
+      // Only owner and admin can create events
+      allow create: if isAdminOrOwner();
+      
+      // Owner can edit all events, admin can edit their own events
+      // Also allow anonymous viewCount increments
+      allow update: if 
+        // Owner can update any event
+        isOwner() ||
+        // Admin can update their own events
+        (getUserRole() == 'admin' && resource.data.organizerId == request.auth.uid) ||
+        // Anyone can increment viewCount only (and updatedAt), and only upward
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['viewCount', 'updatedAt']) &&
+         request.resource.data.viewCount is int && 
+         request.resource.data.viewCount > resource.data.viewCount);
+      
+      // Only owner and admin can delete events
+      allow delete: if isAdminOrOwner();
+
+      // Attendees subcollection - user can read/write their own record
+      match /attendees/{userId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+      
+      // Registrations subcollection
+      match /registrations/{registrationId} {
+        // Allow creation by anyone, but require eventId to match parent
+        allow create: if request.resource.data.eventId == eventId;
+        
+        // 👉 Anyone can read/update/delete registrations
+        allow read, update, delete: if true;
+      }
+    }
+    
+    // Users collection - allow owners to list all users for admin management
+    match /users/{userId} {
+      // Authenticated users can read any user profile
+      // Note: read includes both get (single doc) and list (query) operations
+      allow read: if request.auth != null;
+      
+      // Users can create their own profile
+      allow create: if request.auth != null && request.auth.uid == userId;
+      
+      // Users can update their own profile (except role)
+      // Owner can update any user (including roles, but not their own role)
+      allow update: if 
+        request.auth != null && (
+          // User updating their own profile (but not role)
+          (request.auth.uid == userId && 
+           !('role' in request.resource.data.diff(resource.data).affectedKeys())) ||
+          // Owner updating other users (can change roles)
+          (isOwner() && request.auth.uid != userId)
+        );
+      
+      // Only owner can delete users (but not themselves)
+      allow delete: if isOwner() && request.auth.uid != userId;
+    }
+    
+    // Organizations collection - authenticated users only
+    match /organizations/{organizationId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Reminders collection - authenticated users only
+    match /reminders/{reminderId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Submissions collection - authenticated users only
+    match /submissions/{submissionId} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
