@@ -221,7 +221,6 @@ export default function EventsPage() {
                   onClick={() => {
                     setSearchTerm('');
                     setLocation('');
-                    setSelectedCategory(null);
                   }}
                   className="text-primary hover:underline"
                 >
