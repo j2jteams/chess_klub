@@ -30,52 +30,52 @@ runConfig:
 # --- Build Configuration (buildConfig) ---
 # Environment variables available during the build process
 # NEXT_PUBLIC_ variables need to be available at build time for Next.js
-# Using plain values (not secrets) since these are public client-side config
+# Using Firebase Secrets to keep sensitive values out of source control
 buildConfig:
   env:
     - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
-      value: "chess-klub"
+      secret: NEXT_PUBLIC_FIREBASE_PROJECT_ID
 
     - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
-      value: "chess-klub.firebasestorage.app"
+      secret: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
 
     - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
-      value: "377116681424"
+      secret: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
 
     - variable: NEXT_PUBLIC_FIREBASE_APP_ID
-      value: "1:377116681424:web:a888f4da3eded87d9c2ad5"
+      secret: NEXT_PUBLIC_FIREBASE_APP_ID
 
     - variable: NEXT_PUBLIC_FIREBASE_API_KEY
-      value: "AIzaSyBnGHpnweTIu_sENN4qfh2SvVTm6CQGydc"
+      secret: NEXT_PUBLIC_FIREBASE_API_KEY
 
     - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
-      value: "chess-klub.firebaseapp.com"
+      secret: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
 
     - variable: NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
-      value: "G-6X6ZPMRSED"
+      secret: NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 
 # --- Runtime Environment Variables (env) ---
 # Environment variables available at runtime (also needed for server-side code)
 env:
   - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
-    value: "chess-klub"
+    secret: NEXT_PUBLIC_FIREBASE_PROJECT_ID
 
   - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
-    value: "chess-klub.firebasestorage.app"
+    secret: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
 
   - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
-    value: "377116681424"
+    secret: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
 
   - variable: NEXT_PUBLIC_FIREBASE_APP_ID
-    value: "1:377116681424:web:c2fae0aaff0eff2f9c2ad5"
+    secret: NEXT_PUBLIC_FIREBASE_APP_ID
 
   - variable: NEXT_PUBLIC_FIREBASE_API_KEY
-    value: "AIzaSyBnGHpnweTIu_sENN4qfh2SvVTm6CQGydc"
+    secret: NEXT_PUBLIC_FIREBASE_API_KEY
 
   - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
-    value: "chess-klub.firebaseapp.com"
+    secret: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
 
   - variable: NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
-    value: "G-6X6ZPMRSED"
+    secret: NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
     
 #
