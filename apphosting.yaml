@@ -27,35 +27,9 @@ runConfig:
   # More memory helps with larger workloads or complex data processing.
   memoryMiB: 512 # 512 MB
 
-# --- Build Configuration (buildConfig) ---
-# Environment variables available during the build process
-# NEXT_PUBLIC_ variables need to be available at build time for Next.js
-# Using Firebase Secrets to keep sensitive values out of source control
-buildConfig:
-  env:
-    - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
-      secret: NEXT_PUBLIC_FIREBASE_PROJECT_ID
-
-    - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
-      secret: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
-
-    - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
-      secret: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
-
-    - variable: NEXT_PUBLIC_FIREBASE_APP_ID
-      secret: NEXT_PUBLIC_FIREBASE_APP_ID
-
-    - variable: NEXT_PUBLIC_FIREBASE_API_KEY
-      secret: NEXT_PUBLIC_FIREBASE_API_KEY
-
-    - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
-      secret: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
-
-    - variable: NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
-      secret: NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
-
-# --- Runtime Environment Variables (env) ---
-# Environment variables available at runtime (also needed for server-side code)
+# --- Environment Variables and Secrets (env) ---
+# Define environment variables and securely reference secrets needed by
+# your build and/or runtime environments.
 env:
   - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
     secret: NEXT_PUBLIC_FIREBASE_PROJECT_ID
