@@ -30,6 +30,7 @@ runConfig:
 # --- Environment Variables and Secrets (env) ---
 # Define environment variables and securely reference secrets needed by
 # your build and/or runtime environments.
+# Variables are available during both build and runtime by default.
 env:
   - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
     secret: NEXT_PUBLIC_FIREBASE_PROJECT_ID
@@ -51,5 +52,8 @@ env:
 
   - variable: NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
     secret: NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+
+  - variable: NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+    secret: NEXT_PUBLIC_RECAPTCHA_SITE_KEY
     
 #
